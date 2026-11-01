@@ -1,45 +1,45 @@
 ========================================================================
 regression suite  --  IMPL=buggy
-captured: 2026-11-01T07:26:42.928Z
+captured: 2026-11-01T08:00:25.068Z
 node:     v22.23.4
 ========================================================================
 TAP version 13
 # Subtest: build under test: buggy
 ok 1 - build under test: buggy
   ---
-  duration_ms: 1.11483
+  duration_ms: 0.448542
   type: 'test'
   ...
 # Subtest: TC-01 happy path: three qualifying tasks pay 30 credits and notify once
 ok 2 - TC-01 happy path: three qualifying tasks pay 30 credits and notify once
   ---
-  duration_ms: 2.211696
+  duration_ms: 1.621709
   type: 'test'
   ...
 # Subtest: TC-02 multi-user: credits are grouped per user, one ledger entry each
 ok 3 - TC-02 multi-user: credits are grouped per user, one ledger entry each
   ---
-  duration_ms: 0.359203
+  duration_ms: 0.219833
   type: 'test'
   ...
 # Subtest: TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
 ok 4 - TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
   ---
-  duration_ms: 0.221526
+  duration_ms: 0.0825
   type: 'test'
   ...
 # Subtest: TC-04 cut-off boundary: a task at exactly the period start IS included
 ok 5 - TC-04 cut-off boundary: a task at exactly the period start IS included
   ---
-  duration_ms: 0.442717
+  duration_ms: 0.2045
   type: 'test'
   ...
 # Subtest: TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
 not ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
   ---
-  duration_ms: 0.909262
+  duration_ms: 0.639833
   type: 'test'
-  location: '/home/claude/settlement-quest/tests/settlement.test.js:111:1'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:111:1'
   failureType: 'testCodeFailure'
   error: |-
     Sun 23:59:59Z is inside [Mon 00:00Z, Mon 00:00Z) and must be paid this run
@@ -52,7 +52,7 @@ not ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the n
   actual: 0
   operator: 'strictEqual'
   stack: |-
-    TestContext.<anonymous> (file:///home/claude/settlement-quest/tests/settlement.test.js:116:10)
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:116:10)
     Test.runInAsyncScope (node:async_hooks:214:14)
     Test.run (node:internal/test_runner/test:1047:25)
     Test.processPendingSubtests (node:internal/test_runner/test:744:18)
@@ -63,9 +63,9 @@ not ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the n
 # Subtest: TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
 not ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
   ---
-  duration_ms: 0.321478
+  duration_ms: 0.133583
   type: 'test'
-  location: '/home/claude/settlement-quest/tests/settlement.test.js:129:1'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:129:1'
   failureType: 'testCodeFailure'
   error: |-
     period boundaries are defined in UTC, not in the server or team local zone
@@ -78,7 +78,7 @@ not ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) i
   actual: 0
   operator: 'strictEqual'
   stack: |-
-    TestContext.<anonymous> (file:///home/claude/settlement-quest/tests/settlement.test.js:134:10)
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:134:10)
     Test.runInAsyncScope (node:async_hooks:214:14)
     Test.run (node:internal/test_runner/test:1047:25)
     Test.processPendingSubtests (node:internal/test_runner/test:744:18)
@@ -89,9 +89,9 @@ not ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) i
 # Subtest: TC-07 [SETL-001] no cross-period double count at the boundary instant
 not ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
   ---
-  duration_ms: 0.415275
+  duration_ms: 0.13425
   type: 'test'
-  location: '/home/claude/settlement-quest/tests/settlement.test.js:141:1'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:141:1'
   failureType: 'testCodeFailure'
   error: |-
     one task must never be paid in two periods
@@ -104,7 +104,7 @@ not ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
   actual: 20
   operator: 'strictEqual'
   stack: |-
-    TestContext.<anonymous> (file:///home/claude/settlement-quest/tests/settlement.test.js:147:10)
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:147:10)
     Test.runInAsyncScope (node:async_hooks:214:14)
     Test.run (node:internal/test_runner/test:1047:25)
     Test.processPendingSubtests (node:internal/test_runner/test:744:18)
@@ -115,9 +115,9 @@ not ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
 # Subtest: TC-08 [SETL-001] a task from the previous period is not dragged into this run
 not ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into this run
   ---
-  duration_ms: 0.54068
+  duration_ms: 0.251334
   type: 'test'
-  location: '/home/claude/settlement-quest/tests/settlement.test.js:151:1'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:151:1'
   failureType: 'testCodeFailure'
   error: |-
     Expected values to be strictly equal:
@@ -130,7 +130,7 @@ not ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into 
   actual: 1
   operator: 'strictEqual'
   stack: |-
-    TestContext.<anonymous> (file:///home/claude/settlement-quest/tests/settlement.test.js:156:10)
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:156:10)
     Test.runInAsyncScope (node:async_hooks:214:14)
     Test.run (node:internal/test_runner/test:1047:25)
     Test.processPendingSubtests (node:internal/test_runner/test:744:18)
@@ -141,49 +141,49 @@ not ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into 
 # Subtest: TC-09 duplicate input: the same task ID twice in the source data pays once
 ok 10 - TC-09 duplicate input: the same task ID twice in the source data pays once
   ---
-  duration_ms: 0.598123
+  duration_ms: 0.297583
   type: 'test'
   ...
 # Subtest: TC-10 retry: re-running the same settlement does not create a second payout
 ok 11 - TC-10 retry: re-running the same settlement does not create a second payout
   ---
-  duration_ms: 1.502251
+  duration_ms: 0.450792
   type: 'test'
   ...
 # Subtest: TC-11 partial failure: one failed ledger write does not affect other users, and resumes
 ok 12 - TC-11 partial failure: one failed ledger write does not affect other users, and resumes
   ---
-  duration_ms: 0.342755
+  duration_ms: 0.112625
   type: 'test'
   ...
 # Subtest: TC-12 a notification failure does not reverse the committed payout
 ok 13 - TC-12 a notification failure does not reverse the committed payout
   ---
-  duration_ms: 0.216639
+  duration_ms: 0.07675
   type: 'test'
   ...
 # Subtest: TC-13 account change: a suspended user is held, then paid after reactivation
 ok 14 - TC-13 account change: a suspended user is held, then paid after reactivation
   ---
-  duration_ms: 0.199063
+  duration_ms: 0.060041
   type: 'test'
   ...
 # Subtest: TC-14 admin setting: credits per task is read from config, not hard-coded
 ok 15 - TC-14 admin setting: credits per task is read from config, not hard-coded
   ---
-  duration_ms: 0.177282
+  duration_ms: 0.037458
   type: 'test'
   ...
 # Subtest: TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
 ok 16 - TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
   ---
-  duration_ms: 0.223898
+  duration_ms: 0.048625
   type: 'test'
   ...
 # Subtest: TC-16 admin setting: disabling notifications suppresses the alert but still pays
 ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but still pays
   ---
-  duration_ms: 0.55586
+  duration_ms: 0.04
   type: 'test'
   ...
 1..17
@@ -194,4 +194,4 @@ ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but st
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 105.257777
+# duration_ms 65.469167

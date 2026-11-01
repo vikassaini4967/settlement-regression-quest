@@ -39,7 +39,8 @@ const header = (impl, what, tz) =>
     '',
   ].join('\n');
 
-const testArgs = ['--test', 'tests/settlement.test.js'];
+// The default reporter varies by Node version; summarise() below parses TAP.
+const testArgs = ['--test', '--test-reporter=tap', 'tests/settlement.test.js'];
 const demoArgs = ['src/cli/run-settlement.js'];
 
 // Gate 4: the corrected build must be independent of the runner's timezone.

@@ -42,7 +42,7 @@ attempt rather than from `(periodId, userId)`.
 
 ## Gate 4 — Timezone independence
 
-- [ ] The suite passes under `TZ=UTC`, `TZ=Asia/Seoul` and one DST zone — see [`results/tests-fixed-tz-matrix.txt`](../results/tests-fixed-tz-matrix.txt)
+- [ ] The suite passes under `TZ=UTC`, `TZ=Asia/Seoul` and `TZ=America/New_York` (a DST zone) on Node 20 and 22, enforced on every push and pull request by [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — captured run in [`results/tests-fixed-tz-matrix.txt`](../results/tests-fixed-tz-matrix.txt)
 - [ ] No local-time date construction (`new Date(y, m, d)`, `getFullYear`, `getMonth`, `getDate`, `getDay`) anywhere in settlement code — `Date.UTC` and `getUTC*` only
 - [ ] Ideally enforced by a lint rule rather than by review attention
 

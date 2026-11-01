@@ -7,9 +7,9 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "test": "node --test \"tests/*.test.js\"",
-    "test:buggy": "IMPL=buggy node --test \"tests/*.test.js\"",
-    "test:fixed": "IMPL=fixed node --test \"tests/*.test.js\"",
+    "test": "node --test tests/*.test.js",
+    "test:buggy": "IMPL=buggy node --test tests/*.test.js",
+    "test:fixed": "IMPL=fixed node --test tests/*.test.js",
     "demo:buggy": "IMPL=buggy node src/cli/run-settlement.js",
     "demo:fixed": "IMPL=fixed node src/cli/run-settlement.js",
     "evidence": "node scripts/capture-evidence.js"
