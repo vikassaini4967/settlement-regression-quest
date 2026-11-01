@@ -39,32 +39,32 @@ failure now fails in CI instead of in a user's settlement alert.
 
 - **Any live or production system.** Everything runs in memory. Nothing touches
   a network, a chain or a payment provider.
-- **Four of the five candidate failures.** Ranked in [`intent.md`](intent.md),
+- **Four of the five candidate failures.** Ranked in [`intent.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/intent.md),
   not solved; each has a passing guardrail test so the chosen fix cannot regress
   them.
 - **Invented impact history.** I have no access to MUST's incident data, support
   queue or codebase. There are no ticket counts or production metrics anywhere
   in this submission, and inference is labelled as inference.
 - **Concurrency, DST transitions and the notification retry worker.** Named as
-  known gaps in [`docs/test-cases.md`](docs/test-cases.md#known-gaps) rather
+  known gaps in [`docs/test-cases.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/test-cases.md#known-gaps) rather
   than quietly omitted.
 
 ## 3. Requirements
 
 | # | Requirement | Where it is met |
 |---|---|---|
-| R-1 | At least three candidate failures listed and ranked by impact, frequency and effort; one chosen with reasoning | [`intent.md` §2–3](intent.md) — five candidates, scored |
-| R-2 | Uncertainty explained rather than incident history invented | [`intent.md` §1, §4](intent.md); no metrics claimed anywhere |
-| R-3 | The flow mapped | [`docs/flow-map.md`](docs/flow-map.md) |
-| R-4 | At least eight cases with inputs and expected outcomes, covering happy path, cut-off boundary, timezone conversion, duplicate input, retry, partial failure | [`docs/test-cases.md`](docs/test-cases.md) — 16 cases |
-| R-5 | Assumptions about account changes and admin settings stated | [`docs/business-rules.md`](docs/business-rules.md) R7, R8; tested by TC-13, TC-14, TC-16 |
+| R-1 | At least three candidate failures listed and ranked by impact, frequency and effort; one chosen with reasoning | [`intent.md` §2–3](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/intent.md) — five candidates, scored |
+| R-2 | Uncertainty explained rather than incident history invented | [`intent.md` §1, §4](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/intent.md); no metrics claimed anywhere |
+| R-3 | The flow mapped | [`docs/flow-map.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/flow-map.md) |
+| R-4 | At least eight cases with inputs and expected outcomes, covering happy path, cut-off boundary, timezone conversion, duplicate input, retry, partial failure | [`docs/test-cases.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/test-cases.md) — 16 cases |
+| R-5 | Assumptions about account changes and admin settings stated | [`docs/business-rules.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/business-rules.md) R7, R8; tested by TC-13, TC-14, TC-16 |
 | R-6 | A minimal reproducible fixture with automated checks | `src/`, `tests/` — zero dependencies, Node 20+ |
-| R-7 | The regression fails against the faulty behaviour and passes after the fix | `IMPL=buggy` 13/17 · `IMPL=fixed` 17/17 — [`results/summary.json`](results/summary.json) |
+| R-7 | The regression fails against the faulty behaviour and passes after the fix | `IMPL=buggy` 13/17 · `IMPL=fixed` 17/17 — [`results/summary.json`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/results/summary.json) |
 | R-8 | No live financial system tested | In-memory store only; no network calls in the codebase |
-| R-9 | One actionable defect report: repro, expected vs actual, severity rationale, root cause, evidence, proposed fix | [`docs/defect-report-SETL-001.md`](docs/defect-report-SETL-001.md) |
+| R-9 | One actionable defect report: repro, expected vs actual, severity rationale, root cause, evidence, proposed fix | [`docs/defect-report-SETL-001.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/defect-report-SETL-001.md) |
 | R-10 | Which release checks would block this failure | Defect report, final section; Gates 2, 4 and 6 in the checklist |
-| R-11 | Final test run demonstrated, remaining gaps recorded, release-readiness decision and handoff given | §5 below; [`docs/release-readiness-checklist.md`](docs/release-readiness-checklist.md) |
-| R-12 | AI usage and personal verification made visible | [`docs/ai-usage.md`](docs/ai-usage.md) |
+| R-11 | Final test run demonstrated, remaining gaps recorded, release-readiness decision and handoff given | §5 below; [`docs/release-readiness-checklist.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/release-readiness-checklist.md) |
+| R-12 | AI usage and personal verification made visible | [`docs/ai-usage.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/ai-usage.md) |
 
 ## 4. Completion criteria
 
@@ -83,7 +83,7 @@ All met.
 - [x] Release-readiness checklist with seven gates and a signed GO decision
 - [x] Remaining gaps recorded rather than omitted
 - [x] Evidence generated by script, so it cannot drift from the code
-- [ ] **Loom recorded** — script ready at [`docs/loom-script.md`](docs/loom-script.md); this is yours to record
+- [ ] **Loom recorded** — script ready at [`docs/loom-script.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/loom-script.md); this is yours to record
 
 ## 5. Results
 
@@ -122,13 +122,13 @@ Captured on Node v22.23.4. Regenerate with `node scripts/capture-evidence.js`.
 **GO.** Gates 1–6 pass; no gate fails. For a real system the fix ships with the
 paid-task-ID guard alongside it, and the concurrency constraint is the next
 piece of work before the next settlement change.
-Full record: [`docs/release-readiness-checklist.md`](docs/release-readiness-checklist.md).
+Full record: [`docs/release-readiness-checklist.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/release-readiness-checklist.md).
 
 ## 6. Handoff
 
 To take this over, in order:
 
-1. **Read** [`docs/business-rules.md`](docs/business-rules.md) first. If you disagree with R2, R7 or R8, stop — everything downstream depends on them, and R7 and R8 are my assumptions rather than given rules.
+1. **Read** [`docs/business-rules.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/business-rules.md) first. If you disagree with R2, R7 or R8, stop — everything downstream depends on them, and R7 and R8 are my assumptions rather than given rules.
 2. **Run** `IMPL=buggy node src/cli/run-settlement.js`, then the same with `IMPL=fixed`. Thirty seconds, and the defect is visible without reading code.
 3. **Run** `IMPL=buggy npm test` and `IMPL=fixed npm test` to see the gate open and close.
 4. **To change the business rules:** edit `src/shared/rules.js` and `src/windows/fixed.js`. Nothing else encodes a rule.
@@ -141,7 +141,7 @@ local-time date constructors in settlement code (Gate 4), and move the
 idempotency guarantee from the application-level `hasSettled` lookup to a
 database unique constraint on `(periodId, userId)` plus one on the task ID in
 the payout-line table. The three-timezone matrix already runs in CI:
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+[`.github/workflows/ci.yml`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/.github/workflows/ci.yml).
 
 ---
 
@@ -153,26 +153,26 @@ the payout-line table. The three-timezone matrix already runs in CI:
 |---|---|
 | Repository | https://github.com/vikassaini4967/settlement-regression-quest |
 | Loom (≤ 5 min) | ‹add your Loom URL› |
-| `intent.md` | [intent.md](intent.md) |
+| `intent.md` | [intent.md](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/intent.md) |
 | `directive.md` | this file |
-| Runnable test project | [`tests/settlement.test.js`](tests/settlement.test.js), [`tests/fixtures.js`](tests/fixtures.js), `src/` |
-| 16 cases and results | [`docs/test-cases.md`](docs/test-cases.md) |
-| Defect / root-cause report | [`docs/defect-report-SETL-001.md`](docs/defect-report-SETL-001.md) |
-| Release-readiness checklist | [`docs/release-readiness-checklist.md`](docs/release-readiness-checklist.md) |
-| Business rules | [`docs/business-rules.md`](docs/business-rules.md) |
-| Flow map | [`docs/flow-map.md`](docs/flow-map.md) |
-| AI usage and personal verification | [`docs/ai-usage.md`](docs/ai-usage.md) |
+| Runnable test project | [`tests/settlement.test.js`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/tests/settlement.test.js), [`tests/fixtures.js`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/tests/fixtures.js), `src/` |
+| 16 cases and results | [`docs/test-cases.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/test-cases.md) |
+| Defect / root-cause report | [`docs/defect-report-SETL-001.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/defect-report-SETL-001.md) |
+| Release-readiness checklist | [`docs/release-readiness-checklist.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/release-readiness-checklist.md) |
+| Business rules | [`docs/business-rules.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/business-rules.md) |
+| Flow map | [`docs/flow-map.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/flow-map.md) |
+| AI usage and personal verification | [`docs/ai-usage.md`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/docs/ai-usage.md) |
 
 ### Verification evidence
 
 | | |
 |---|---|
-| Machine-readable summary | [`results/summary.json`](results/summary.json) |
-| Faulty build, full test output | [`results/tests-buggy.txt`](results/tests-buggy.txt) |
-| Corrected build, full test output | [`results/tests-fixed.txt`](results/tests-fixed.txt) |
-| Timezone matrix | [`results/tests-fixed-tz-matrix.txt`](results/tests-fixed-tz-matrix.txt) |
-| Faulty build, demo run | [`results/demo-buggy.txt`](results/demo-buggy.txt) |
-| Corrected build, demo run | [`results/demo-fixed.txt`](results/demo-fixed.txt) |
+| Machine-readable summary | [`results/summary.json`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/results/summary.json) |
+| Faulty build, full test output | [`results/tests-buggy.txt`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/results/tests-buggy.txt) |
+| Corrected build, full test output | [`results/tests-fixed.txt`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/results/tests-fixed.txt) |
+| Timezone matrix | [`results/tests-fixed-tz-matrix.txt`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/results/tests-fixed-tz-matrix.txt) |
+| Faulty build, demo run | [`results/demo-buggy.txt`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/results/demo-buggy.txt) |
+| Corrected build, demo run | [`results/demo-fixed.txt`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/results/demo-fixed.txt) |
 
 ### Reproduce every claim above
 
