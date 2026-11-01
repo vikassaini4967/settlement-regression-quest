@@ -1,0 +1,41 @@
+{
+  "capturedAt": "2026-11-01T07:26:43.783Z",
+  "node": "v22.23.4",
+  "buggy": {
+    "tests": 17,
+    "pass": 13,
+    "fail": 4,
+    "failing": [
+      "TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday",
+      "TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period",
+      "TC-07 [SETL-001] no cross-period double count at the boundary instant",
+      "TC-08 [SETL-001] a task from the previous period is not dragged into this run"
+    ]
+  },
+  "fixed": {
+    "tests": 17,
+    "pass": 17,
+    "fail": 0,
+    "failing": []
+  },
+  "fixedTimezoneMatrix": {
+    "UTC": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "failing": []
+    },
+    "Asia/Seoul": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "failing": []
+    },
+    "America/New_York": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "failing": []
+    }
+  }
+}

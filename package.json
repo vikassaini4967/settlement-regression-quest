@@ -1,0 +1,19 @@
+{
+  "name": "settlement-quest",
+  "version": "1.0.0",
+  "description": "Reproducible fixture and regression suite for a weekly rewards settlement / payout / notification flow. Zero runtime dependencies.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\"",
+    "test:buggy": "IMPL=buggy node --test \"tests/*.test.js\"",
+    "test:fixed": "IMPL=fixed node --test \"tests/*.test.js\"",
+    "demo:buggy": "IMPL=buggy node src/cli/run-settlement.js",
+    "demo:fixed": "IMPL=fixed node src/cli/run-settlement.js",
+    "evidence": "node scripts/capture-evidence.js"
+  },
+  "license": "MIT",
+  "private": true
+}
