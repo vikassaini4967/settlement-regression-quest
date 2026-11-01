@@ -34,7 +34,7 @@ hours of the current period — with no alert and no error.
 ## Steps to reproduce
 
 ```bash
-cd settlement-quest
+cd settlement-regression-quest
 IMPL=buggy node src/cli/run-settlement.js
 ```
 

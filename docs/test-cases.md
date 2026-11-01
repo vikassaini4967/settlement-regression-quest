@@ -74,7 +74,7 @@ half, which is why it is a mitigation and not the fix.
 
 Recorded honestly rather than papered over:
 
-- **No DST zone is exercised.** Asia/Seoul has no DST, so the fixture models a
+- **No DST-transition case.** Asia/Seoul has no DST, so the fixture models a
   constant +9 offset. A team running the same code against a DST zone would need
   cases either side of a transition.
 - **Concurrency is not tested.** Two settlement runs firing simultaneously would

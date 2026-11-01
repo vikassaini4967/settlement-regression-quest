@@ -136,11 +136,12 @@ To take this over, in order:
 6. **To change fault behaviour:** `store.failLedgerFor(userId)` and `store.failNotificationFor(userId)` in `src/shared/store.js`.
 7. **Never hand-edit `results/`.** Run `node scripts/capture-evidence.js`.
 
-**If this were going into a real repository:** wire `npm test` into CI across the
-three-timezone matrix, add the lint rule banning local-time date constructors in
-settlement code (Gate 4), and move the idempotency guarantee from the
-application-level `hasSettled` lookup to a database unique constraint on
-`(periodId, userId)` plus one on the task ID in the payout-line table.
+**If this were going into a real repository:** add the lint rule banning
+local-time date constructors in settlement code (Gate 4), and move the
+idempotency guarantee from the application-level `hasSettled` lookup to a
+database unique constraint on `(periodId, userId)` plus one on the task ID in
+the payout-line table. The three-timezone matrix already runs in CI:
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
 
@@ -150,7 +151,7 @@ application-level `hasSettled` lookup to a database unique constraint on
 
 | | |
 |---|---|
-| Repository | ‹add your public repo URL› |
+| Repository | https://github.com/vikassaini4967/settlement-regression-quest |
 | Loom (≤ 5 min) | ‹add your Loom URL› |
 | `intent.md` | [intent.md](intent.md) |
 | `directive.md` | this file |
@@ -176,7 +177,7 @@ application-level `hasSettled` lookup to a database unique constraint on
 ### Reproduce every claim above
 
 ```bash
-git clone ‹your repo URL› && cd settlement-quest
+git clone https://github.com/vikassaini4967/settlement-regression-quest.git && cd settlement-regression-quest
 IMPL=buggy node src/cli/run-settlement.js    # the defect
 IMPL=fixed node src/cli/run-settlement.js    # the fix
 IMPL=buggy npm test                          # 13 pass, 4 fail

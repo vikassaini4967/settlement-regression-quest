@@ -18,7 +18,7 @@ No dependencies. No network. No live financial system.
 Requires Node 20 or newer (built and verified on v22).
 
 ```bash
-cd settlement-quest
+cd settlement-regression-quest
 
 # See the defect
 IMPL=buggy node src/cli/run-settlement.js
