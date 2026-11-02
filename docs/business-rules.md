@@ -18,6 +18,8 @@ at a different time must still settle the same period — the period is derived
 from the calendar, not from when the job happened to start. A job that is two
 hours late settles the same week.
 
+Held by **TC-21**.
+
 ## R2 — The settled period
 
 The period is **`[Monday 00:00:00.000 UTC, the following Monday 00:00:00.000 UTC)`**
@@ -38,7 +40,7 @@ Worked example for the run at `2026-11-03T09:00:00Z` (a Tuesday):
 
 - A task completed **Sunday 2026-11-01 at 23:59:59 UTC is inside** this period
   and is paid by the Tuesday 2026-11-03 run. This is the case the role
-  description calls out as currently unanswerable.
+  description raises.
 - A task completed at **exactly `2026-11-02T00:00:00.000Z` is outside** this
   period. It belongs to the next one and is paid a week later. The boundary
   instant belongs to the later period, never to both.
@@ -61,18 +63,20 @@ Held by **TC-01, TC-14**.
 
 ## R4 — Exactly once
 
-A task ID is counted **at most once, ever**. Two distinct mechanisms are needed
-and both are rules, not implementation details:
+A task ID is counted **at most once, ever**. Three distinct mechanisms are needed
+and all are rules, not implementation details:
 
 - **R4a** — duplicate task IDs within one run are collapsed to one.
 - **R4b** — re-running a settlement for a period that is already settled for a
   user adds nothing. Idempotency is keyed on `(periodId, userId)`.
+- **R4c** — a task ID that any earlier ledger entry covers is refused, whatever
+  its period. R4b cannot do this: a different period is a different key.
 
 *Resolved ambiguity:* a retry is not a failure. Re-running a completed
 settlement must be a safe, boring, no-op operation that anyone on call can do
 without checking with engineering first.
 
-Held by **TC-09, TC-10, TC-11, TC-15**.
+Held by **TC-09, TC-10, TC-11, TC-15, TC-20**.
 
 ## R5 — Notification ordering
 
@@ -102,15 +106,15 @@ so I have made this assumption explicit rather than leaving it implied:
 
 > A payout is committed only for an account in `ACTIVE` state at the moment the
 > run evaluates it. A non-active account is **held**, not dropped: the credits
-> are not forfeited, no alert is sent, and the tasks settle on a later run once
-> the account is active again.
+> are not forfeited and no alert is sent. Once the account is active again, the
+> tasks settle on a re-run of that period or on a reconciliation run (R9).
+> The next weekly run does **not** pick them up, because its window has moved on.
 
 This is the conservative reading — it never pays an account that should not be
 paid, and never silently destroys a user's earnings. If the real rule is
-"forfeit on suspension", TC-13 is the test that needs to change, and it is the
-only one.
+"forfeit on suspension", TC-13 and TC-19 are the tests that need to change.
 
-Held by **TC-13**.
+Held by **TC-13, TC-19**.
 
 ## R8 — Admin configuration (assumption)
 
@@ -119,3 +123,27 @@ settings. Disabling notifications suppresses alerts but does **not** suppress
 payouts — money and messaging are independently controlled.
 
 Held by **TC-14, TC-16**.
+
+## R9 — Reconciliation (assumption)
+
+A weekly run looks at one period, so a task it misses is not retried by the next
+one. The brief does not say what happens to such a task. My assumption, in the
+spirit of "each qualifying task earns 10 credits":
+
+> An eligible task from a closed period that no ledger entry covers is still
+> owed. A reconciliation run pays it, once, under its own period ID
+> (`RECON-<date>`), with the task-ID guard forced on. Account holds, ledger
+> commit and notification ordering work exactly as in a weekly run.
+
+*Resolved ambiguities:*
+
+- Reconciliation pays at the credit value in force when it runs, not the value
+  at the time of the task. If the real rule differs, this is the line to change.
+- It runs after the weekly run for that week, and is safe to repeat.
+- A user reconciled once this week is skipped by a second reconciliation in the
+  same week. A task that arrived in between waits for next week's.
+
+`findUnpaidTasks` is the read-only form of the same query. It is what an operator
+reviews before paying, and it is what a run reporting `SUCCESS` cannot tell you.
+
+Held by **TC-18, TC-19**.

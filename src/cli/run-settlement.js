@@ -5,16 +5,19 @@
  *   IMPL=buggy node src/cli/run-settlement.js
  *   IMPL=fixed node src/cli/run-settlement.js
  *
- * It settles one realistic week for four users and prints the window, who got
- * paid, who did not, and which alerts went out. The scenario is built so the
- * difference between the two builds is visible in the output without reading
- * any test code.
+ * It settles one realistic week for four synthetic users and prints the window,
+ * who got paid, who did not, and which alerts went out. The previous week was
+ * settled correctly, so this is the first run after the build under test ships.
+ * The difference between the two builds is visible in the output without
+ * reading any test code.
  */
 
 import { runSettlement } from '../shared/engine.js';
-import { settlementWindow, implementationName } from '../impl.js';
+import { settlementWindow, engineOptions, implementationName } from '../impl.js';
 import { createStore } from '../shared/store.js';
+import { settlementWindow as correctWindow } from '../windows/fixed.js';
 
+const PREVIOUS_RUN_AT = new Date('2026-10-27T09:00:00.000Z');
 const RUN_AT = new Date('2026-11-03T09:00:00.000Z');
 
 const TASKS = [
@@ -29,17 +32,19 @@ const TASKS = [
   // Sun 16:30 UTC = Mon 01:30 Asia/Seoul. Still inside the period in UTC.
   { taskId: 'T-1005', userId: 'U-dara', completedAt: '2026-11-01T16:30:00.000Z', status: 'COMPLETED' },
 
-  // Late in the PREVIOUS period. Settled a week ago, must not reappear.
+  // Late in the PREVIOUS period. Paid by the previous run, must not reappear.
   { taskId: 'T-0999', userId: 'U-ben', completedAt: '2026-10-25T20:00:00.000Z', status: 'COMPLETED' },
 ];
 
 const USERS = ['U-aisha', 'U-ben', 'U-chen', 'U-dara'].map((userId) => ({ userId, status: 'ACTIVE' }));
 
 const store = createStore({ tasks: TASKS, users: USERS });
-const result = runSettlement({ store, runAt: RUN_AT, settlementWindow });
+runSettlement({ store, runAt: PREVIOUS_RUN_AT, settlementWindow: correctWindow });
+const result = runSettlement({ store, runAt: RUN_AT, settlementWindow, ...engineOptions });
 
 const line = '-'.repeat(72);
 console.log(line);
+console.log(`previous run     : ${PREVIOUS_RUN_AT.toISOString()} correct window, paid T-0999`);
 console.log(`settlement run   : ${RUN_AT.toISOString()}`);
 console.log(`build            : ${implementationName}`);
 console.log(`period           : ${result.periodId}`);
@@ -65,6 +70,12 @@ if (result.notifications.length === 0) console.log('  (none sent)');
 for (const n of result.notifications) {
   console.log(`  ${n.userId.padEnd(10)} ${n.status}`);
 }
+
+const paidTaskIds = store.ledger.flatMap((e) => e.taskIds);
+const paidTwice = [...new Set(paidTaskIds.filter((id, i) => paidTaskIds.indexOf(id) !== i))];
+console.log('\nTASKS PAID MORE THAN ONCE');
+if (paidTwice.length === 0) console.log('  (none)');
+for (const id of paidTwice) console.log(`  ${id}`);
 
 console.log(`\ntotals           : ${result.totals.usersPaid} users, ${result.totals.creditsPaid} credits`);
 console.log(`status           : ${result.status}`);

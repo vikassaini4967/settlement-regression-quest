@@ -1,9 +1,9 @@
 {
-  "capturedAt": "2026-11-01T08:00:25.502Z",
-  "node": "v22.23.4",
+  "capturedAt": "2026-11-02T08:05:30.843Z",
+  "node": "v25.2.1",
   "buggy": {
-    "tests": 17,
-    "pass": 13,
+    "tests": 22,
+    "pass": 18,
     "fail": 4,
     "failing": [
       "TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday",
@@ -13,29 +13,59 @@
     ]
   },
   "fixed": {
-    "tests": 17,
-    "pass": 17,
+    "tests": 22,
+    "pass": 22,
     "fail": 0,
     "failing": []
   },
   "fixedTimezoneMatrix": {
     "UTC": {
-      "tests": 17,
-      "pass": 17,
+      "tests": 22,
+      "pass": 22,
       "fail": 0,
       "failing": []
     },
     "Asia/Seoul": {
-      "tests": 17,
-      "pass": 17,
+      "tests": 22,
+      "pass": 22,
       "fail": 0,
       "failing": []
     },
     "America/New_York": {
-      "tests": 17,
-      "pass": 17,
+      "tests": 22,
+      "pass": 22,
       "fail": 0,
       "failing": []
+    }
+  },
+  "localtimeTimezoneMatrix": {
+    "UTC": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "failing": []
+    },
+    "Asia/Seoul": {
+      "tests": 22,
+      "pass": 16,
+      "fail": 6,
+      "failing": [
+        "TC-01 happy path: three qualifying tasks pay 30 credits and notify once",
+        "TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period",
+        "TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday",
+        "TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period",
+        "TC-08 [SETL-001] a task from the previous period is not dragged into this run",
+        "TC-21 a job that fires late settles the same period (R1)"
+      ]
+    },
+    "America/New_York": {
+      "tests": 22,
+      "pass": 20,
+      "fail": 2,
+      "failing": [
+        "TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period",
+        "TC-04 cut-off boundary: a task at exactly the period start IS included"
+      ]
     }
   }
 }

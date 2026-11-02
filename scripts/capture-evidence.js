@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Regenerates everything in results/ from a clean run, so the evidence linked
- * from directive.md is never hand-edited.
+ * from directive.md is never hand-edited, then checks the claims directive.md
+ * makes about that evidence. Exits non-zero if any of them is no longer true.
  *
  *   node scripts/capture-evidence.js
  */
@@ -24,7 +25,7 @@ function capture(args, impl, tz) {
       stdio: ['ignore', 'pipe', 'pipe'],
     });
   } catch (error) {
-    // A non-zero exit is expected for the faulty build; keep its output.
+    // A non-zero exit is expected for the faulty builds; keep its output.
     return `${error.stdout ?? ''}${error.stderr ?? ''}`;
   }
 }
@@ -42,19 +43,29 @@ const header = (impl, what, tz) =>
 // The default reporter varies by Node version; summarise() below parses TAP.
 const testArgs = ['--test', '--test-reporter=tap', 'tests/settlement.test.js'];
 const demoArgs = ['src/cli/run-settlement.js'];
+const cutoverArgs = ['src/cli/run-cutover.js'];
 
-// Gate 4: the corrected build must be independent of the runner's timezone.
-// Asia/Seoul is the zone that produced the defect; America/New_York adds DST.
+// Gate 4: the corrected build must be independent of the runner's timezone, and
+// a real local-time regression must be caught. Asia/Seoul is the zone the
+// defect is written against; America/New_York adds DST and the opposite sign.
 const TZ_MATRIX = ['UTC', 'Asia/Seoul', 'America/New_York'];
+
+const runMatrix = (impl) =>
+  Object.fromEntries(
+    TZ_MATRIX.map((tz) => [tz, header(impl, 'regression suite', tz) + capture(testArgs, impl, tz)]),
+  );
+
+const fixedByTz = runMatrix('fixed');
+const localtimeByTz = runMatrix('localtime');
 
 const files = {
   'tests-buggy.txt': header('buggy', 'regression suite') + capture(testArgs, 'buggy'),
   'tests-fixed.txt': header('fixed', 'regression suite') + capture(testArgs, 'fixed'),
   'demo-buggy.txt': header('buggy', 'single settlement run') + capture(demoArgs, 'buggy'),
   'demo-fixed.txt': header('fixed', 'single settlement run') + capture(demoArgs, 'fixed'),
-  'tests-fixed-tz-matrix.txt': TZ_MATRIX.map(
-    (tz) => header('fixed', 'regression suite', tz) + capture(testArgs, 'fixed', tz),
-  ).join('\n'),
+  'demo-cutover.txt': header('n/a', 'consecutive weeks and cutover') + capture(cutoverArgs, 'fixed'),
+  'tests-fixed-tz-matrix.txt': Object.values(fixedByTz).join('\n'),
+  'tests-localtime-tz-matrix.txt': Object.values(localtimeByTz).join('\n'),
 };
 
 for (const [name, content] of Object.entries(files)) {
@@ -70,14 +81,16 @@ const summarise = (text) => ({
   failing: [...text.matchAll(/^not ok \d+ - (.+)$/gm)].map((m) => m[1]),
 });
 
+const summariseMatrix = (byTz) =>
+  Object.fromEntries(Object.entries(byTz).map(([tz, text]) => [tz, summarise(text)]));
+
 const summary = {
   capturedAt: new Date().toISOString(),
   node: process.version,
   buggy: summarise(files['tests-buggy.txt']),
   fixed: summarise(files['tests-fixed.txt']),
-  fixedTimezoneMatrix: Object.fromEntries(
-    TZ_MATRIX.map((tz) => [tz, summarise(capture(testArgs, 'fixed', tz))]),
-  ),
+  fixedTimezoneMatrix: summariseMatrix(fixedByTz),
+  localtimeTimezoneMatrix: summariseMatrix(localtimeByTz),
 };
 
 writeFileSync(join(resultsDir, 'summary.json'), JSON.stringify(summary, null, 2) + '\n', 'utf8');
@@ -86,3 +99,21 @@ console.log(
   `\nbuggy: ${summary.buggy.pass}/${summary.buggy.tests} pass, ${summary.buggy.fail} fail` +
     `\nfixed: ${summary.fixed.pass}/${summary.fixed.tests} pass, ${summary.fixed.fail} fail`,
 );
+
+const caseIds = (run) => run.failing.map((name) => name.split(' ')[0]);
+const allPass = (run) => run.tests > 0 && run.fail === 0;
+const local = summary.localtimeTimezoneMatrix;
+
+const checks = [
+  ['faulty build fails exactly TC-05 to TC-08', caseIds(summary.buggy).join() === 'TC-05,TC-06,TC-07,TC-08'],
+  ['corrected build passes', allPass(summary.fixed)],
+  ['corrected build passes in every timezone', Object.values(summary.fixedTimezoneMatrix).every(allPass)],
+  ['local-time regression is invisible under UTC', allPass(local.UTC)],
+  ['local-time regression is caught under Asia/Seoul', local['Asia/Seoul'].fail > 0],
+  ['local-time regression is caught under America/New_York', local['America/New_York'].fail > 0],
+];
+
+console.log('');
+for (const [claim, holds] of checks) console.log(`${holds ? 'ok    ' : 'FAILED'} ${claim}`);
+
+if (checks.some(([, holds]) => !holds)) process.exit(1);

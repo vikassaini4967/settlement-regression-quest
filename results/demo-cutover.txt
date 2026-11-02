@@ -1,0 +1,31 @@
+========================================================================
+consecutive weeks and cutover  --  IMPL=n/a
+captured: 2026-11-02T08:05:30.791Z
+node:     v25.2.1
+========================================================================
+
+A. Faulty window every week. Band paid a week late, nothing lost, nothing doubled.
+  2026-10-27  faulty        paid: (nobody)
+  2026-11-03  faulty        paid: T-0999
+  2026-11-10  faulty        paid: T-1004, T-1005
+  times paid: T-0999 x1   T-1005 x1   T-1004 x1
+
+B. Fault ships after a correct run. T-0999 is paid twice.
+  2026-10-27  corrected     paid: T-0999
+  2026-11-03  faulty        paid: T-0999
+  2026-11-10  faulty        paid: T-1004, T-1005
+  times paid: T-0999 x2   T-1005 x1   T-1004 x1
+
+C. Fix ships, no reconciliation. T-1004 and T-1005 are never paid.
+  2026-10-27  faulty        paid: (nobody)
+  2026-11-03  faulty        paid: T-0999
+  2026-11-10  corrected     paid: (nobody)
+  times paid: T-0999 x1   T-1005 x0   T-1004 x0
+
+D. Fix ships, then reconciliation. Every task paid exactly once.
+  2026-10-27  faulty        paid: (nobody)
+  2026-11-03  faulty        paid: T-0999
+  2026-11-10  corrected     paid: (nobody)
+  unpaid report                  : T-1005, T-1004
+  2026-11-10  reconciliation paid: T-1004, T-1005
+  times paid: T-0999 x1   T-1005 x1   T-1004 x1

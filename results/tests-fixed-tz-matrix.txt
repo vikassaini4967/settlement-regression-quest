@@ -1,353 +1,443 @@
 ========================================================================
 regression suite  --  IMPL=fixed  TZ=UTC
-captured: 2026-11-01T08:00:25.291Z
-node:     v22.23.4
+captured: 2026-11-02T08:05:29.638Z
+node:     v25.2.1
 ========================================================================
 TAP version 13
 # Subtest: build under test: fixed
 ok 1 - build under test: fixed
   ---
-  duration_ms: 0.418
+  duration_ms: 0.655542
   type: 'test'
   ...
 # Subtest: TC-01 happy path: three qualifying tasks pay 30 credits and notify once
 ok 2 - TC-01 happy path: three qualifying tasks pay 30 credits and notify once
   ---
-  duration_ms: 1.761083
+  duration_ms: 1.30075
   type: 'test'
   ...
 # Subtest: TC-02 multi-user: credits are grouped per user, one ledger entry each
 ok 3 - TC-02 multi-user: credits are grouped per user, one ledger entry each
   ---
-  duration_ms: 0.101542
+  duration_ms: 0.126958
   type: 'test'
   ...
 # Subtest: TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
 ok 4 - TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
   ---
-  duration_ms: 0.075541
+  duration_ms: 0.094375
   type: 'test'
   ...
 # Subtest: TC-04 cut-off boundary: a task at exactly the period start IS included
 ok 5 - TC-04 cut-off boundary: a task at exactly the period start IS included
   ---
-  duration_ms: 0.195834
+  duration_ms: 0.074666
   type: 'test'
   ...
 # Subtest: TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
 ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
   ---
-  duration_ms: 0.083
+  duration_ms: 0.420625
   type: 'test'
   ...
 # Subtest: TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
 ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
   ---
-  duration_ms: 0.10475
+  duration_ms: 0.068834
   type: 'test'
   ...
 # Subtest: TC-07 [SETL-001] no cross-period double count at the boundary instant
 ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
   ---
-  duration_ms: 0.06125
+  duration_ms: 0.075625
   type: 'test'
   ...
 # Subtest: TC-08 [SETL-001] a task from the previous period is not dragged into this run
 ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into this run
   ---
-  duration_ms: 0.201708
+  duration_ms: 0.06825
   type: 'test'
   ...
 # Subtest: TC-09 duplicate input: the same task ID twice in the source data pays once
 ok 10 - TC-09 duplicate input: the same task ID twice in the source data pays once
   ---
-  duration_ms: 0.282375
+  duration_ms: 0.104625
   type: 'test'
   ...
 # Subtest: TC-10 retry: re-running the same settlement does not create a second payout
 ok 11 - TC-10 retry: re-running the same settlement does not create a second payout
   ---
-  duration_ms: 0.139416
+  duration_ms: 0.094333
   type: 'test'
   ...
 # Subtest: TC-11 partial failure: one failed ledger write does not affect other users, and resumes
 ok 12 - TC-11 partial failure: one failed ledger write does not affect other users, and resumes
   ---
-  duration_ms: 0.111875
+  duration_ms: 0.131417
   type: 'test'
   ...
 # Subtest: TC-12 a notification failure does not reverse the committed payout
 ok 13 - TC-12 a notification failure does not reverse the committed payout
   ---
-  duration_ms: 0.07025
+  duration_ms: 0.08425
   type: 'test'
   ...
 # Subtest: TC-13 account change: a suspended user is held, then paid after reactivation
 ok 14 - TC-13 account change: a suspended user is held, then paid after reactivation
   ---
-  duration_ms: 0.059375
+  duration_ms: 0.092375
   type: 'test'
   ...
 # Subtest: TC-14 admin setting: credits per task is read from config, not hard-coded
 ok 15 - TC-14 admin setting: credits per task is read from config, not hard-coded
   ---
-  duration_ms: 0.038958
+  duration_ms: 0.057292
   type: 'test'
   ...
-# Subtest: TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
-ok 16 - TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
+# Subtest: TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+ok 16 - TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
   ---
-  duration_ms: 0.054333
+  duration_ms: 0.141
   type: 'test'
   ...
 # Subtest: TC-16 admin setting: disabling notifications suppresses the alert but still pays
 ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but still pays
   ---
-  duration_ms: 0.042666
+  duration_ms: 0.05225
   type: 'test'
   ...
-1..17
-# tests 17
+# Subtest: TC-17 impact: a faulty window running every week pays the band a week late, never twice
+ok 18 - TC-17 impact: a faulty window running every week pays the band a week late, never twice
+  ---
+  duration_ms: 0.079083
+  type: 'test'
+  ...
+# Subtest: TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+ok 19 - TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+  ---
+  duration_ms: 0.167875
+  type: 'test'
+  ...
+# Subtest: TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+ok 20 - TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+  ---
+  duration_ms: 0.146
+  type: 'test'
+  ...
+# Subtest: TC-20 a task ID re-emitted in a later period pays once by default (R4)
+ok 21 - TC-20 a task ID re-emitted in a later period pays once by default (R4)
+  ---
+  duration_ms: 0.052291
+  type: 'test'
+  ...
+# Subtest: TC-21 a job that fires late settles the same period (R1)
+ok 22 - TC-21 a job that fires late settles the same period (R1)
+  ---
+  duration_ms: 0.035209
+  type: 'test'
+  ...
+1..22
+# tests 22
 # suites 0
-# pass 17
+# pass 22
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 43.383125
+# duration_ms 89.983417
 
 ========================================================================
 regression suite  --  IMPL=fixed  TZ=Asia/Seoul
-captured: 2026-11-01T08:00:25.361Z
-node:     v22.23.4
+captured: 2026-11-02T08:05:29.789Z
+node:     v25.2.1
 ========================================================================
 TAP version 13
 # Subtest: build under test: fixed
 ok 1 - build under test: fixed
   ---
-  duration_ms: 0.42425
+  duration_ms: 0.637125
   type: 'test'
   ...
 # Subtest: TC-01 happy path: three qualifying tasks pay 30 credits and notify once
 ok 2 - TC-01 happy path: three qualifying tasks pay 30 credits and notify once
   ---
-  duration_ms: 1.633542
+  duration_ms: 0.975958
   type: 'test'
   ...
 # Subtest: TC-02 multi-user: credits are grouped per user, one ledger entry each
 ok 3 - TC-02 multi-user: credits are grouped per user, one ledger entry each
   ---
-  duration_ms: 0.118875
+  duration_ms: 0.102208
   type: 'test'
   ...
 # Subtest: TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
 ok 4 - TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
   ---
-  duration_ms: 0.081625
+  duration_ms: 0.091333
   type: 'test'
   ...
 # Subtest: TC-04 cut-off boundary: a task at exactly the period start IS included
 ok 5 - TC-04 cut-off boundary: a task at exactly the period start IS included
   ---
-  duration_ms: 0.195125
+  duration_ms: 0.074084
   type: 'test'
   ...
 # Subtest: TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
 ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
   ---
-  duration_ms: 0.08575
+  duration_ms: 0.424417
   type: 'test'
   ...
 # Subtest: TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
 ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
   ---
-  duration_ms: 0.107208
+  duration_ms: 0.067458
   type: 'test'
   ...
 # Subtest: TC-07 [SETL-001] no cross-period double count at the boundary instant
 ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
   ---
-  duration_ms: 0.059042
+  duration_ms: 0.0735
   type: 'test'
   ...
 # Subtest: TC-08 [SETL-001] a task from the previous period is not dragged into this run
 ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into this run
   ---
-  duration_ms: 0.209791
+  duration_ms: 0.067041
   type: 'test'
   ...
 # Subtest: TC-09 duplicate input: the same task ID twice in the source data pays once
 ok 10 - TC-09 duplicate input: the same task ID twice in the source data pays once
   ---
-  duration_ms: 0.286958
+  duration_ms: 0.105209
   type: 'test'
   ...
 # Subtest: TC-10 retry: re-running the same settlement does not create a second payout
 ok 11 - TC-10 retry: re-running the same settlement does not create a second payout
   ---
-  duration_ms: 0.403708
+  duration_ms: 0.091084
   type: 'test'
   ...
 # Subtest: TC-11 partial failure: one failed ledger write does not affect other users, and resumes
 ok 12 - TC-11 partial failure: one failed ledger write does not affect other users, and resumes
   ---
-  duration_ms: 0.114125
+  duration_ms: 0.119417
   type: 'test'
   ...
 # Subtest: TC-12 a notification failure does not reverse the committed payout
 ok 13 - TC-12 a notification failure does not reverse the committed payout
   ---
-  duration_ms: 0.075667
+  duration_ms: 0.087875
   type: 'test'
   ...
 # Subtest: TC-13 account change: a suspended user is held, then paid after reactivation
 ok 14 - TC-13 account change: a suspended user is held, then paid after reactivation
   ---
-  duration_ms: 0.063791
+  duration_ms: 0.087583
   type: 'test'
   ...
 # Subtest: TC-14 admin setting: credits per task is read from config, not hard-coded
 ok 15 - TC-14 admin setting: credits per task is read from config, not hard-coded
   ---
-  duration_ms: 0.040958
+  duration_ms: 0.05475
   type: 'test'
   ...
-# Subtest: TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
-ok 16 - TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
+# Subtest: TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+ok 16 - TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
   ---
-  duration_ms: 0.0535
+  duration_ms: 0.135583
   type: 'test'
   ...
 # Subtest: TC-16 admin setting: disabling notifications suppresses the alert but still pays
 ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but still pays
   ---
-  duration_ms: 0.041334
+  duration_ms: 0.048709
   type: 'test'
   ...
-1..17
-# tests 17
+# Subtest: TC-17 impact: a faulty window running every week pays the band a week late, never twice
+ok 18 - TC-17 impact: a faulty window running every week pays the band a week late, never twice
+  ---
+  duration_ms: 0.067709
+  type: 'test'
+  ...
+# Subtest: TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+ok 19 - TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+  ---
+  duration_ms: 0.167208
+  type: 'test'
+  ...
+# Subtest: TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+ok 20 - TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+  ---
+  duration_ms: 0.112208
+  type: 'test'
+  ...
+# Subtest: TC-20 a task ID re-emitted in a later period pays once by default (R4)
+ok 21 - TC-20 a task ID re-emitted in a later period pays once by default (R4)
+  ---
+  duration_ms: 0.052833
+  type: 'test'
+  ...
+# Subtest: TC-21 a job that fires late settles the same period (R1)
+ok 22 - TC-21 a job that fires late settles the same period (R1)
+  ---
+  duration_ms: 0.03625
+  type: 'test'
+  ...
+1..22
+# tests 22
 # suites 0
-# pass 17
+# pass 22
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 43.538458
+# duration_ms 73.77575
 
 ========================================================================
 regression suite  --  IMPL=fixed  TZ=America/New_York
-captured: 2026-11-01T08:00:25.428Z
-node:     v22.23.4
+captured: 2026-11-02T08:05:29.914Z
+node:     v25.2.1
 ========================================================================
 TAP version 13
 # Subtest: build under test: fixed
 ok 1 - build under test: fixed
   ---
-  duration_ms: 0.4225
+  duration_ms: 0.641917
   type: 'test'
   ...
 # Subtest: TC-01 happy path: three qualifying tasks pay 30 credits and notify once
 ok 2 - TC-01 happy path: three qualifying tasks pay 30 credits and notify once
   ---
-  duration_ms: 2.062167
+  duration_ms: 0.997792
   type: 'test'
   ...
 # Subtest: TC-02 multi-user: credits are grouped per user, one ledger entry each
 ok 3 - TC-02 multi-user: credits are grouped per user, one ledger entry each
   ---
-  duration_ms: 0.107209
+  duration_ms: 0.104125
   type: 'test'
   ...
 # Subtest: TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
 ok 4 - TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
   ---
-  duration_ms: 0.078542
+  duration_ms: 0.096875
   type: 'test'
   ...
 # Subtest: TC-04 cut-off boundary: a task at exactly the period start IS included
 ok 5 - TC-04 cut-off boundary: a task at exactly the period start IS included
   ---
-  duration_ms: 0.196833
+  duration_ms: 0.0775
   type: 'test'
   ...
 # Subtest: TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
 ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
   ---
-  duration_ms: 0.085375
+  duration_ms: 0.093416
   type: 'test'
   ...
 # Subtest: TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
 ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
   ---
-  duration_ms: 0.111333
+  duration_ms: 0.356709
   type: 'test'
   ...
 # Subtest: TC-07 [SETL-001] no cross-period double count at the boundary instant
 ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
   ---
-  duration_ms: 0.061125
+  duration_ms: 0.071125
   type: 'test'
   ...
 # Subtest: TC-08 [SETL-001] a task from the previous period is not dragged into this run
 ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into this run
   ---
-  duration_ms: 0.201375
+  duration_ms: 0.061583
   type: 'test'
   ...
 # Subtest: TC-09 duplicate input: the same task ID twice in the source data pays once
 ok 10 - TC-09 duplicate input: the same task ID twice in the source data pays once
   ---
-  duration_ms: 0.284542
+  duration_ms: 0.098666
   type: 'test'
   ...
 # Subtest: TC-10 retry: re-running the same settlement does not create a second payout
 ok 11 - TC-10 retry: re-running the same settlement does not create a second payout
   ---
-  duration_ms: 0.110625
+  duration_ms: 0.094167
   type: 'test'
   ...
 # Subtest: TC-11 partial failure: one failed ledger write does not affect other users, and resumes
 ok 12 - TC-11 partial failure: one failed ledger write does not affect other users, and resumes
   ---
-  duration_ms: 0.099166
+  duration_ms: 0.120166
   type: 'test'
   ...
 # Subtest: TC-12 a notification failure does not reverse the committed payout
 ok 13 - TC-12 a notification failure does not reverse the committed payout
   ---
-  duration_ms: 0.069125
+  duration_ms: 0.088917
   type: 'test'
   ...
 # Subtest: TC-13 account change: a suspended user is held, then paid after reactivation
 ok 14 - TC-13 account change: a suspended user is held, then paid after reactivation
   ---
-  duration_ms: 0.059209
+  duration_ms: 0.096209
   type: 'test'
   ...
 # Subtest: TC-14 admin setting: credits per task is read from config, not hard-coded
 ok 15 - TC-14 admin setting: credits per task is read from config, not hard-coded
   ---
-  duration_ms: 0.036084
+  duration_ms: 0.055625
   type: 'test'
   ...
-# Subtest: TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
-ok 16 - TC-15 defence in depth: the paid-task-ID guard contains a bad window boundary
+# Subtest: TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+ok 16 - TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
   ---
-  duration_ms: 0.050916
+  duration_ms: 0.135584
   type: 'test'
   ...
 # Subtest: TC-16 admin setting: disabling notifications suppresses the alert but still pays
 ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but still pays
   ---
-  duration_ms: 0.039833
+  duration_ms: 0.054375
   type: 'test'
   ...
-1..17
-# tests 17
+# Subtest: TC-17 impact: a faulty window running every week pays the band a week late, never twice
+ok 18 - TC-17 impact: a faulty window running every week pays the band a week late, never twice
+  ---
+  duration_ms: 0.059875
+  type: 'test'
+  ...
+# Subtest: TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+ok 19 - TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+  ---
+  duration_ms: 0.151791
+  type: 'test'
+  ...
+# Subtest: TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+ok 20 - TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+  ---
+  duration_ms: 0.213625
+  type: 'test'
+  ...
+# Subtest: TC-20 a task ID re-emitted in a later period pays once by default (R4)
+ok 21 - TC-20 a task ID re-emitted in a later period pays once by default (R4)
+  ---
+  duration_ms: 0.043
+  type: 'test'
+  ...
+# Subtest: TC-21 a job that fires late settles the same period (R1)
+ok 22 - TC-21 a job that fires late settles the same period (R1)
+  ---
+  duration_ms: 0.033333
+  type: 'test'
+  ...
+1..22
+# tests 22
 # suites 0
-# pass 17
+# pass 22
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 46.031583
+# duration_ms 81.325958

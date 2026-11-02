@@ -12,6 +12,7 @@
     "test:fixed": "IMPL=fixed node --test tests/*.test.js",
     "demo:buggy": "IMPL=buggy node src/cli/run-settlement.js",
     "demo:fixed": "IMPL=fixed node src/cli/run-settlement.js",
+    "demo:cutover": "node src/cli/run-cutover.js",
     "evidence": "node scripts/capture-evidence.js"
   },
   "license": "MIT",

@@ -10,6 +10,8 @@
 import { createStore } from '../src/shared/store.js';
 
 // ---- settlement runs --------------------------------------------------------
+/** The Tuesday before. Settles [2026-10-19T00:00Z, 2026-10-26T00:00Z). */
+export const RUN_PRIOR_WEEK = new Date('2026-10-27T09:00:00.000Z');
 /** Tuesday 09:00 UTC. Settles [2026-10-26T00:00Z, 2026-11-02T00:00Z). */
 export const RUN_WEEK_A = new Date('2026-11-03T09:00:00.000Z');
 /** The following Tuesday. Settles [2026-11-02T00:00Z, 2026-11-09T00:00Z). */
@@ -35,8 +37,10 @@ export const LATE_SUNDAY_UTC = '2026-11-01T23:59:59.000Z';
 export const SUNDAY_1630_UTC = '2026-11-01T16:30:00.000Z';
 /** Sunday 15:00 UTC = Monday 00:00 in Asia/Seoul. The faulty boundary itself. */
 export const SEOUL_MIDNIGHT_UTC = '2026-11-01T15:00:00.000Z';
-/** Late in the PREVIOUS period. Already settled a week earlier. */
+/** Late in the PREVIOUS period. A correct prior run settles it a week earlier. */
 export const PRIOR_PERIOD_LATE = '2026-10-25T20:00:00.000Z';
+/** Mid-way through period B. */
+export const PERIOD_B_MIDWEEK = '2026-11-04T10:00:00.000Z';
 
 // ---- helpers ----------------------------------------------------------------
 export function task(taskId, userId, completedAt, overrides = {}) {

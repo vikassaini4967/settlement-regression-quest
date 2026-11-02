@@ -1,23 +1,31 @@
 /**
  * Selects which build is under test.
  *
- *   IMPL=buggy  -> the faulty window (defect SETL-001 present)
- *   IMPL=fixed  -> the corrected window (default)
+ *   IMPL=fixed      -> the corrected build (default)
+ *   IMPL=buggy      -> the faulty window, task-ID guard off (defect SETL-001)
+ *   IMPL=localtime  -> the corrected build with local-time date construction;
+ *                      only wrong when the host is not on UTC
  *
- * Everything else in the system is identical between the two builds.
+ * The engine is identical across builds. A build chooses the window and whether
+ * the task-ID guard is on.
  */
 
 import * as fixed from './windows/fixed.js';
 import * as buggy from './windows/buggy.js';
+import * as localtime from './windows/localtime.js';
 
+const builds = { fixed, buggy, localtime };
 const requested = (process.env.IMPL ?? 'fixed').toLowerCase();
 
-if (!['fixed', 'buggy'].includes(requested)) {
-  throw new Error(`IMPL must be "fixed" or "buggy", got "${process.env.IMPL}"`);
+if (!Object.hasOwn(builds, requested)) {
+  throw new Error(
+    `IMPL must be one of ${Object.keys(builds).join(', ')}, got "${process.env.IMPL}"`,
+  );
 }
 
-const selected = requested === 'buggy' ? buggy : fixed;
+const selected = builds[requested];
 
 export const settlementWindow = selected.settlementWindow;
+export const engineOptions = { guardAlreadyPaidTaskIds: selected.guardAlreadyPaidTaskIds };
 export const implementationName = selected.implementationName;
 export const isBuggyBuild = requested === 'buggy';

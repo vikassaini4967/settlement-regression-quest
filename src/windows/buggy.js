@@ -1,8 +1,8 @@
 /**
  * FAULTY settlement window — this is defect SETL-001.
  *
- * This module reproduces, in a deterministic fixture, the two mistakes that
- * were made together in the original implementation:
+ * This module reproduces, in a deterministic fixture, two mistakes made
+ * together. The service is fictional, so neither has any incident history:
  *
  *   B1  The "Monday 00:00" boundaries were built from Seoul wall-clock midnight
  *       (the team's local time, KST = UTC+9) and then compared against task
@@ -13,18 +13,22 @@
  *       end inclusive. Combined with the inclusive lower bound, an instant that
  *       lands exactly on a boundary belongs to two consecutive periods.
  *
- * In production the +9h shift came from local-time date construction
- * (`new Date(y, m, d)` on a server running TZ=Asia/Seoul). It is modelled here
- * as an explicit offset constant so the fixture reproduces identically on any
- * machine and in CI, regardless of the runner's TZ. The arithmetic the test
- * suite sees is the same either way.
+ * The +9h shift is what local-time date construction (`new Date(y, m, d)` on a
+ * host running TZ=Asia/Seoul) produces. It is modelled here as an explicit
+ * offset constant so the fixture reproduces identically on any machine and in
+ * CI, regardless of the runner's TZ. src/windows/localtime.js has the real
+ * construction.
  *
  * Net effect of B1 + B2 on a run at Tue 2026-11-03T09:00:00Z:
  *   intended : [Mon 2026-10-26T00:00:00Z , Mon 2026-11-02T00:00:00Z)
  *   actual   : [Sun 2026-10-25T15:00:00Z , Sun 2026-11-01T15:00:00Z]
- * The period drags in the last 9 hours of the PREVIOUS week (already paid, so
- * the task is paid twice) and drops the last 9 hours of the CURRENT week (the
- * user is not paid and no notification is sent until the following week).
+ *
+ * Tasks in the last 9 hours of a period land in the wrong week. What that does
+ * to money depends on which window ran the week before:
+ *   faulty then faulty    the band is paid one week late, once
+ *   correct then faulty   the band is paid twice (the fault ships)
+ *   faulty then correct   the band is never paid (the fix ships) until
+ *                         reconciliation pays it, see src/shared/reconcile.js
  */
 
 import { DAY_MS, HOUR_MS } from '../shared/rules.js';
@@ -54,5 +58,8 @@ export function settlementWindow(runAt) {
     label: `[${start.toISOString()} , ${end.toISOString()}]`,
   };
 }
+
+/** Before the fix the only idempotency guard was per (period, user). */
+export const guardAlreadyPaidTaskIds = false;
 
 export const implementationName = 'buggy';

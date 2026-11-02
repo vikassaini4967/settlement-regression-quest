@@ -1,19 +1,22 @@
 /**
  * The settlement engine.
  *
- * One engine, two window implementations. The ONLY difference between the
- * faulty build and the corrected build is which `settlementWindow` is injected,
- * which is also the honest shape of the root cause: SETL-001 lives entirely
- * inside the window function, and the fix is a change to that function.
+ * One engine for every build. A build injects its `settlementWindow`, which is
+ * the honest shape of the root cause: SETL-001 lives entirely inside the window
+ * function. The task-ID guard is a separate control, on by default.
  *
  * Order of operations matters and is asserted by the test suite:
  *   1. select tasks whose completedAt falls in the period        (R2)
  *   2. drop duplicate task IDs within the run                    (R4)
  *   3. drop users already settled for this period (idempotency)  (R4)
- *   4. hold users whose account is not payable
- *   5. commit the ledger entry                                   -- money moves here
- *   6. ONLY THEN attempt the notification                        (R5)
- *   7. a notification failure is recorded, never unwound         (R6)
+ *   4. drop task IDs an earlier ledger entry covers              (R4)
+ *   5. hold users whose account is not payable
+ *   6. commit the ledger entry                                   -- money moves here
+ *   7. ONLY THEN attempt the notification                        (R5)
+ *   8. a notification failure is recorded, never unwound         (R6)
+ *
+ * Step 3 comes before step 4 so a retry reports ALREADY_SETTLED_FOR_PERIOD
+ * rather than disappearing from the run record.
  */
 
 import { defaultAdminConfig, ELIGIBLE_TASK_STATUS, PAYABLE_ACCOUNT_STATUS } from './rules.js';
@@ -25,18 +28,17 @@ import { defaultAdminConfig, ELIGIBLE_TASK_STATUS, PAYABLE_ACCOUNT_STATUS } from
  * @param {(runAt: Date) => any} args.settlementWindow injected window implementation
  * @param {object} [args.adminConfig]
  * @param {boolean} [args.guardAlreadyPaidTaskIds]
- *   Defence-in-depth control recommended by the SETL-001 root-cause analysis.
- *   Defaults to false, which is the behaviour that was in production: the only
- *   idempotency guard was per (period, user), so a task dragged into a second
- *   period by a bad window boundary was paid twice. Turning it on refuses to
- *   pay a task ID that any earlier ledger entry already covered.
+ *   Refuses to pay a task ID that any earlier ledger entry already covers, so
+ *   R4 ("at most once, ever") holds across periods and not only within a run.
+ *   The (period, user) key cannot do that: a different period is a different
+ *   key. The faulty build turns this off to model the state before the fix.
  */
 export function runSettlement({
   store,
   runAt,
   settlementWindow,
   adminConfig = defaultAdminConfig(),
-  guardAlreadyPaidTaskIds = false,
+  guardAlreadyPaidTaskIds = true,
 }) {
   const period = settlementWindow(runAt);
   const creditsPerTask = adminConfig.creditsPerTask;
@@ -62,7 +64,6 @@ export function runSettlement({
   );
 
   // --- 2. de-duplicate task IDs within the run (R4) ------------------------
-  const alreadyPaid = guardAlreadyPaidTaskIds ? store.paidTaskIds() : new Set();
   const seenTaskIds = new Set();
   /** @type {Map<string, string[]>} */
   const tasksByUser = new Map();
@@ -72,10 +73,6 @@ export function runSettlement({
       result.duplicateTaskIdsDropped.push(task.taskId);
       continue;
     }
-    if (alreadyPaid.has(task.taskId)) {
-      result.alreadyPaidTaskIdsDropped.push(task.taskId);
-      continue;
-    }
     seenTaskIds.add(task.taskId);
     if (!tasksByUser.has(task.userId)) tasksByUser.set(task.userId, []);
     tasksByUser.get(task.userId).push(task.taskId);
@@ -83,10 +80,9 @@ export function runSettlement({
 
   // Deterministic ordering so partial-failure runs are reproducible.
   const userIds = [...tasksByUser.keys()].sort();
+  const alreadyPaid = guardAlreadyPaidTaskIds ? store.paidTaskIds() : new Set();
 
   for (const userId of userIds) {
-    const taskIds = tasksByUser.get(userId);
-    const credits = taskIds.length * creditsPerTask;
     const idempotencyKey = `${period.periodId}:${userId}`;
 
     // --- 3. already settled for this period (retry safety, R4) -------------
@@ -95,7 +91,17 @@ export function runSettlement({
       continue;
     }
 
-    // --- 4. account state --------------------------------------------------
+    // --- 4. paid by an earlier entry, whatever its period (R4) --------------
+    const taskIds = [];
+    for (const taskId of tasksByUser.get(userId)) {
+      if (alreadyPaid.has(taskId)) result.alreadyPaidTaskIdsDropped.push(taskId);
+      else taskIds.push(taskId);
+    }
+    if (taskIds.length === 0) continue;
+
+    const credits = taskIds.length * creditsPerTask;
+
+    // --- 5. account state --------------------------------------------------
     const user = store.users.get(userId);
     if (!user) {
       result.held.push({ userId, reason: 'UNKNOWN_ACCOUNT', taskIds });
@@ -106,7 +112,7 @@ export function runSettlement({
       continue;
     }
 
-    // --- 5. commit the payout ----------------------------------------------
+    // --- 6. commit the payout ----------------------------------------------
     try {
       store.writeLedger({ idempotencyKey, userId, periodId: period.periodId, credits, taskIds });
     } catch (error) {
@@ -119,7 +125,7 @@ export function runSettlement({
     result.totals.usersPaid += 1;
     result.totals.creditsPaid += credits;
 
-    // --- 6/7. notify after commit; never unwind on failure (R5, R6) --------
+    // --- 7/8. notify after commit; never unwind on failure (R5, R6) --------
     if (!adminConfig.notificationsEnabled) {
       const record = { userId, periodId: period.periodId, credits, status: 'SUPPRESSED_BY_ADMIN' };
       store.recordNotification(record);

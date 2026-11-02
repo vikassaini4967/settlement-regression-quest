@@ -43,4 +43,7 @@ export function settlementWindow(runAt) {
   };
 }
 
+/** R4 says "at most once, ever", so the corrected build refuses repeat task IDs. */
+export const guardAlreadyPaidTaskIds = true;
+
 export const implementationName = 'fixed';

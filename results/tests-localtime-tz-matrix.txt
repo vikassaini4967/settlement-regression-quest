@@ -1,0 +1,612 @@
+========================================================================
+regression suite  --  IMPL=localtime  TZ=UTC
+captured: 2026-11-02T08:05:30.047Z
+node:     v25.2.1
+========================================================================
+TAP version 13
+# Subtest: build under test: localtime
+ok 1 - build under test: localtime
+  ---
+  duration_ms: 0.634541
+  type: 'test'
+  ...
+# Subtest: TC-01 happy path: three qualifying tasks pay 30 credits and notify once
+ok 2 - TC-01 happy path: three qualifying tasks pay 30 credits and notify once
+  ---
+  duration_ms: 0.923875
+  type: 'test'
+  ...
+# Subtest: TC-02 multi-user: credits are grouped per user, one ledger entry each
+ok 3 - TC-02 multi-user: credits are grouped per user, one ledger entry each
+  ---
+  duration_ms: 0.102791
+  type: 'test'
+  ...
+# Subtest: TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
+ok 4 - TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
+  ---
+  duration_ms: 0.096458
+  type: 'test'
+  ...
+# Subtest: TC-04 cut-off boundary: a task at exactly the period start IS included
+ok 5 - TC-04 cut-off boundary: a task at exactly the period start IS included
+  ---
+  duration_ms: 0.070041
+  type: 'test'
+  ...
+# Subtest: TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
+ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
+  ---
+  duration_ms: 0.085125
+  type: 'test'
+  ...
+# Subtest: TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
+ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
+  ---
+  duration_ms: 0.367167
+  type: 'test'
+  ...
+# Subtest: TC-07 [SETL-001] no cross-period double count at the boundary instant
+ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
+  ---
+  duration_ms: 0.069375
+  type: 'test'
+  ...
+# Subtest: TC-08 [SETL-001] a task from the previous period is not dragged into this run
+ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into this run
+  ---
+  duration_ms: 0.060708
+  type: 'test'
+  ...
+# Subtest: TC-09 duplicate input: the same task ID twice in the source data pays once
+ok 10 - TC-09 duplicate input: the same task ID twice in the source data pays once
+  ---
+  duration_ms: 0.098208
+  type: 'test'
+  ...
+# Subtest: TC-10 retry: re-running the same settlement does not create a second payout
+ok 11 - TC-10 retry: re-running the same settlement does not create a second payout
+  ---
+  duration_ms: 0.094541
+  type: 'test'
+  ...
+# Subtest: TC-11 partial failure: one failed ledger write does not affect other users, and resumes
+ok 12 - TC-11 partial failure: one failed ledger write does not affect other users, and resumes
+  ---
+  duration_ms: 0.120625
+  type: 'test'
+  ...
+# Subtest: TC-12 a notification failure does not reverse the committed payout
+ok 13 - TC-12 a notification failure does not reverse the committed payout
+  ---
+  duration_ms: 0.089792
+  type: 'test'
+  ...
+# Subtest: TC-13 account change: a suspended user is held, then paid after reactivation
+ok 14 - TC-13 account change: a suspended user is held, then paid after reactivation
+  ---
+  duration_ms: 0.089208
+  type: 'test'
+  ...
+# Subtest: TC-14 admin setting: credits per task is read from config, not hard-coded
+ok 15 - TC-14 admin setting: credits per task is read from config, not hard-coded
+  ---
+  duration_ms: 0.054834
+  type: 'test'
+  ...
+# Subtest: TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+ok 16 - TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+  ---
+  duration_ms: 0.159625
+  type: 'test'
+  ...
+# Subtest: TC-16 admin setting: disabling notifications suppresses the alert but still pays
+ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but still pays
+  ---
+  duration_ms: 0.051833
+  type: 'test'
+  ...
+# Subtest: TC-17 impact: a faulty window running every week pays the band a week late, never twice
+ok 18 - TC-17 impact: a faulty window running every week pays the band a week late, never twice
+  ---
+  duration_ms: 0.058792
+  type: 'test'
+  ...
+# Subtest: TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+ok 19 - TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+  ---
+  duration_ms: 0.158041
+  type: 'test'
+  ...
+# Subtest: TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+ok 20 - TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+  ---
+  duration_ms: 0.115042
+  type: 'test'
+  ...
+# Subtest: TC-20 a task ID re-emitted in a later period pays once by default (R4)
+ok 21 - TC-20 a task ID re-emitted in a later period pays once by default (R4)
+  ---
+  duration_ms: 0.043667
+  type: 'test'
+  ...
+# Subtest: TC-21 a job that fires late settles the same period (R1)
+ok 22 - TC-21 a job that fires late settles the same period (R1)
+  ---
+  duration_ms: 0.032083
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 80.35325
+
+========================================================================
+regression suite  --  IMPL=localtime  TZ=Asia/Seoul
+captured: 2026-11-02T08:05:30.182Z
+node:     v25.2.1
+========================================================================
+TAP version 13
+# Subtest: build under test: localtime
+ok 1 - build under test: localtime
+  ---
+  duration_ms: 0.634666
+  type: 'test'
+  ...
+# Subtest: TC-01 happy path: three qualifying tasks pay 30 credits and notify once
+not ok 2 - TC-01 happy path: three qualifying tasks pay 30 credits and notify once
+  ---
+  duration_ms: 1.002666
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:74:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'SETL-2026-10-25'
+    - 'SETL-2026-10-26'
+                     ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SETL-2026-10-26'
+  actual: 'SETL-2026-10-25'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:84:10)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# Subtest: TC-02 multi-user: credits are grouped per user, one ledger entry each
+ok 3 - TC-02 multi-user: credits are grouped per user, one ledger entry each
+  ---
+  duration_ms: 0.113709
+  type: 'test'
+  ...
+# Subtest: TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
+not ok 4 - TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
+  ---
+  duration_ms: 0.119125
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:114:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'SETL-2026-11-01'
+    - 'SETL-2026-11-02'
+                     ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SETL-2026-11-02'
+  actual: 'SETL-2026-11-01'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:122:10)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: TC-04 cut-off boundary: a task at exactly the period start IS included
+ok 5 - TC-04 cut-off boundary: a task at exactly the period start IS included
+  ---
+  duration_ms: 0.071375
+  type: 'test'
+  ...
+# Subtest: TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
+not ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
+  ---
+  duration_ms: 0.445834
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:134:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Sun 23:59:59Z is inside [Mon 00:00Z, Mon 00:00Z) and must be paid this run
+    
+    0 !== 10
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 10
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:139:10)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
+not ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
+  ---
+  duration_ms: 0.075459
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:152:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    period boundaries are defined in UTC, not in the server or team local zone
+    
+    0 !== 10
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 10
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:157:10)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: TC-07 [SETL-001] no cross-period double count at the boundary instant
+ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
+  ---
+  duration_ms: 0.073667
+  type: 'test'
+  ...
+# Subtest: TC-08 [SETL-001] a task from the previous period is not dragged into this run
+not ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into this run
+  ---
+  duration_ms: 0.086459
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:174:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:179:10)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: TC-09 duplicate input: the same task ID twice in the source data pays once
+ok 10 - TC-09 duplicate input: the same task ID twice in the source data pays once
+  ---
+  duration_ms: 0.618917
+  type: 'test'
+  ...
+# Subtest: TC-10 retry: re-running the same settlement does not create a second payout
+ok 11 - TC-10 retry: re-running the same settlement does not create a second payout
+  ---
+  duration_ms: 0.090792
+  type: 'test'
+  ...
+# Subtest: TC-11 partial failure: one failed ledger write does not affect other users, and resumes
+ok 12 - TC-11 partial failure: one failed ledger write does not affect other users, and resumes
+  ---
+  duration_ms: 0.147
+  type: 'test'
+  ...
+# Subtest: TC-12 a notification failure does not reverse the committed payout
+ok 13 - TC-12 a notification failure does not reverse the committed payout
+  ---
+  duration_ms: 0.08475
+  type: 'test'
+  ...
+# Subtest: TC-13 account change: a suspended user is held, then paid after reactivation
+ok 14 - TC-13 account change: a suspended user is held, then paid after reactivation
+  ---
+  duration_ms: 0.068959
+  type: 'test'
+  ...
+# Subtest: TC-14 admin setting: credits per task is read from config, not hard-coded
+ok 15 - TC-14 admin setting: credits per task is read from config, not hard-coded
+  ---
+  duration_ms: 0.044334
+  type: 'test'
+  ...
+# Subtest: TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+ok 16 - TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+  ---
+  duration_ms: 0.153291
+  type: 'test'
+  ...
+# Subtest: TC-16 admin setting: disabling notifications suppresses the alert but still pays
+ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but still pays
+  ---
+  duration_ms: 0.046875
+  type: 'test'
+  ...
+# Subtest: TC-17 impact: a faulty window running every week pays the band a week late, never twice
+ok 18 - TC-17 impact: a faulty window running every week pays the band a week late, never twice
+  ---
+  duration_ms: 0.069709
+  type: 'test'
+  ...
+# Subtest: TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+ok 19 - TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+  ---
+  duration_ms: 0.161375
+  type: 'test'
+  ...
+# Subtest: TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+ok 20 - TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+  ---
+  duration_ms: 0.109208
+  type: 'test'
+  ...
+# Subtest: TC-20 a task ID re-emitted in a later period pays once by default (R4)
+ok 21 - TC-20 a task ID re-emitted in a later period pays once by default (R4)
+  ---
+  duration_ms: 0.044334
+  type: 'test'
+  ...
+# Subtest: TC-21 a job that fires late settles the same period (R1)
+not ok 22 - TC-21 a job that fires late settles the same period (R1)
+  ---
+  duration_ms: 0.087333
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:423:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'SETL-2026-10-25'
+    - 'SETL-2026-10-26'
+                     ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SETL-2026-10-26'
+  actual: 'SETL-2026-10-25'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:425:12)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 16
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 76.189792
+
+========================================================================
+regression suite  --  IMPL=localtime  TZ=America/New_York
+captured: 2026-11-02T08:05:30.310Z
+node:     v25.2.1
+========================================================================
+TAP version 13
+# Subtest: build under test: localtime
+ok 1 - build under test: localtime
+  ---
+  duration_ms: 0.640708
+  type: 'test'
+  ...
+# Subtest: TC-01 happy path: three qualifying tasks pay 30 credits and notify once
+ok 2 - TC-01 happy path: three qualifying tasks pay 30 credits and notify once
+  ---
+  duration_ms: 0.950916
+  type: 'test'
+  ...
+# Subtest: TC-02 multi-user: credits are grouped per user, one ledger entry each
+ok 3 - TC-02 multi-user: credits are grouped per user, one ledger entry each
+  ---
+  duration_ms: 0.104625
+  type: 'test'
+  ...
+# Subtest: TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
+not ok 4 - TC-03 cut-off boundary: a task at exactly Monday 00:00 UTC belongs to the NEXT period
+  ---
+  duration_ms: 0.549333
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:114:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    upper bound is exclusive
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:118:10)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: TC-04 cut-off boundary: a task at exactly the period start IS included
+not ok 5 - TC-04 cut-off boundary: a task at exactly the period start IS included
+  ---
+  duration_ms: 0.086667
+  type: 'test'
+  location: '/Users/vikassaini/Downloads/settlement-quest 2/tests/settlement.test.js:126:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    lower bound is inclusive
+    
+    0 !== 10
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 10
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/vikassaini/Downloads/settlement-quest%202/tests/settlement.test.js:131:10)
+    Test.runInAsyncScope (node:async_hooks:213:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
+ok 6 - TC-05 [SETL-001] a task completed late Sunday UTC is settled on the next Tuesday
+  ---
+  duration_ms: 0.08275
+  type: 'test'
+  ...
+# Subtest: TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
+ok 7 - TC-06 [SETL-001] timezone conversion: Sun 16:30 UTC (Mon 01:30 KST) is still this period
+  ---
+  duration_ms: 0.424291
+  type: 'test'
+  ...
+# Subtest: TC-07 [SETL-001] no cross-period double count at the boundary instant
+ok 8 - TC-07 [SETL-001] no cross-period double count at the boundary instant
+  ---
+  duration_ms: 0.071167
+  type: 'test'
+  ...
+# Subtest: TC-08 [SETL-001] a task from the previous period is not dragged into this run
+ok 9 - TC-08 [SETL-001] a task from the previous period is not dragged into this run
+  ---
+  duration_ms: 0.062625
+  type: 'test'
+  ...
+# Subtest: TC-09 duplicate input: the same task ID twice in the source data pays once
+ok 10 - TC-09 duplicate input: the same task ID twice in the source data pays once
+  ---
+  duration_ms: 0.1025
+  type: 'test'
+  ...
+# Subtest: TC-10 retry: re-running the same settlement does not create a second payout
+ok 11 - TC-10 retry: re-running the same settlement does not create a second payout
+  ---
+  duration_ms: 0.080708
+  type: 'test'
+  ...
+# Subtest: TC-11 partial failure: one failed ledger write does not affect other users, and resumes
+ok 12 - TC-11 partial failure: one failed ledger write does not affect other users, and resumes
+  ---
+  duration_ms: 0.125166
+  type: 'test'
+  ...
+# Subtest: TC-12 a notification failure does not reverse the committed payout
+ok 13 - TC-12 a notification failure does not reverse the committed payout
+  ---
+  duration_ms: 0.089375
+  type: 'test'
+  ...
+# Subtest: TC-13 account change: a suspended user is held, then paid after reactivation
+ok 14 - TC-13 account change: a suspended user is held, then paid after reactivation
+  ---
+  duration_ms: 0.092459
+  type: 'test'
+  ...
+# Subtest: TC-14 admin setting: credits per task is read from config, not hard-coded
+ok 15 - TC-14 admin setting: credits per task is read from config, not hard-coded
+  ---
+  duration_ms: 0.06425
+  type: 'test'
+  ...
+# Subtest: TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+ok 16 - TC-15 defence in depth: the task-ID guard stops a second payment when a faulty window ships
+  ---
+  duration_ms: 0.157167
+  type: 'test'
+  ...
+# Subtest: TC-16 admin setting: disabling notifications suppresses the alert but still pays
+ok 17 - TC-16 admin setting: disabling notifications suppresses the alert but still pays
+  ---
+  duration_ms: 0.049959
+  type: 'test'
+  ...
+# Subtest: TC-17 impact: a faulty window running every week pays the band a week late, never twice
+ok 18 - TC-17 impact: a faulty window running every week pays the band a week late, never twice
+  ---
+  duration_ms: 0.060916
+  type: 'test'
+  ...
+# Subtest: TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+ok 19 - TC-18 cutover: the band is lost when the fix ships, until reconciliation pays it once
+  ---
+  duration_ms: 0.174625
+  type: 'test'
+  ...
+# Subtest: TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+ok 20 - TC-19 reconciliation: held, failed and late-arriving tasks are paid after the window moves on
+  ---
+  duration_ms: 0.115
+  type: 'test'
+  ...
+# Subtest: TC-20 a task ID re-emitted in a later period pays once by default (R4)
+ok 21 - TC-20 a task ID re-emitted in a later period pays once by default (R4)
+  ---
+  duration_ms: 0.050041
+  type: 'test'
+  ...
+# Subtest: TC-21 a job that fires late settles the same period (R1)
+ok 22 - TC-21 a job that fires late settles the same period (R1)
+  ---
+  duration_ms: 0.036958
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 20
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 73.847

@@ -1,9 +1,10 @@
 ========================================================================
 single settlement run  --  IMPL=buggy
-captured: 2026-11-01T08:00:25.238Z
-node:     v22.23.4
+captured: 2026-11-02T08:05:30.694Z
+node:     v25.2.1
 ========================================================================
 ------------------------------------------------------------------------
+previous run     : 2026-10-27T09:00:00.000Z correct window, paid T-0999
 settlement run   : 2026-11-03T09:00:00.000Z
 build            : buggy
 period           : SETL-2026-10-26
@@ -22,6 +23,9 @@ NOT PAID THIS RUN
 ALERTS
   U-aisha    SENT
   U-ben      SENT
+
+TASKS PAID MORE THAN ONCE
+  T-0999
 
 totals           : 2 users, 40 credits
 status           : SUCCESS
