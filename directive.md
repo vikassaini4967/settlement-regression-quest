@@ -95,8 +95,8 @@ All met.
 | | |
 |---|---|
 | Repository | https://github.com/vikassaini4967/settlement-regression-quest |
-| Loom (≤ 5 min) | ‹add your Loom URL› |
-| Career Path & Career Leverage Video (≤ 5 min) | ‹add your Loom or Google Drive URL› |
+| Loom (≤ 5 min) | https://www.loom.com/share/6bb645d3ed6944c8bb18b45869490b08 |
+| Career Path & Career Leverage Video (≤ 5 min) | https://www.loom.com/share/00b15d48ea4545c4b1d78b83dc0daf4e |
 | `intent.md` | [intent.md](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/intent.md) |
 | `directive.md` | this file |
 | Runnable test project | [`tests/settlement.test.js`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/tests/settlement.test.js), [`tests/fixtures.js`](https://github.com/vikassaini4967/settlement-regression-quest/blob/main/tests/fixtures.js), `src/` |
@@ -234,8 +234,8 @@ table. The timezone matrix and the faulty-build gate already run in CI:
 
 | | |
 |---|---|
-| Actual effort | ‹your real total, in hours, including documentation and both videos› |
-| What pre-existed | ‹say "Nothing; built for this Quest", or name what you reused and what you changed› |
+| Actual effort | About 10–12 hours in total, including documentation and both videos |
+| What pre-existed | Nothing; built for this Quest |
 
 ### I. Data and confidentiality
 
